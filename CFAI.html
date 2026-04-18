@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sorting Comparison</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      color: #fff;
+      margin-top: 30px;
+    }
+
+    input {
+      padding: 10px;
+      width: 300px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #333;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #333;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    h3 {
+      color: #fff;
+      margin-top: 20px;
+    }
+
+    #result, #complexity {
+      background: #fff;
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin: 10px;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #complexity {
+      color: #0077cc;
+      font-weight: bold;
+    }
+  </style>
+
+</head>
+<body>
+
+<h2>Sorting Comparison Tool</h2>
+
+<input type="text" id="inputArray" placeholder="Enter numbers (e.g. 5,2,9,1)">
+<br><br>
+
+<button onclick="bubbleSort()">Bubble Sort</button>
+<button onclick="mergeSortWrapper()">Merge Sort</button>
+
+<h3>Output:</h3>
+<p id="result"></p>
+<p id="complexity"></p>
+
+<script>
+
+
+function getInput() {
+  return document.getElementById("inputArray").value
+    .split(",")
+    .map(Number);
+}
+
+
+function isSorted(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < arr[i - 1]) return false;
+  }
+  return true;
+}
+
+function isReverseSorted(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > arr[i - 1]) return false;
+  }
+  return true;
+}
+
+
+function bubbleSort() {
+  let arr = getInput();
+
+  let bestCase = isSorted(arr);
+  let worstCase = isReverseSorted(arr);
+
+  let n = arr.length;
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        let temp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+      }
+    }
+  }
+
+  let caseType = "";
+  let complexity = "";
+
+  if (bestCase) {
+    caseType = "Best Case";
+    complexity = "O(n)";
+  } else if (worstCase) {
+    caseType = "Worst Case";
+    complexity = "O(n²)";
+  } else {
+    caseType = "Average Case";
+    complexity = "O(n²)";
+  }
+
+  document.getElementById("result").innerText = "Sorted: " + arr;
+  document.getElementById("complexity").innerText =
+    caseType + " → Time Complexity: " + complexity;
+}
+
+
+function mergeSort(arr) {
+  if (arr.length <= 1) return arr;
+
+  let mid = Math.floor(arr.length / 2);
+  let left = mergeSort(arr.slice(0, mid));
+  let right = mergeSort(arr.slice(mid));
+
+  return merge(left, right);
+}
+
+
+function merge(left, right) {
+  let result = [];
+
+  while (left.length && right.length) {
+    if (left[0] < right[0]) {
+      result.push(left.shift());
+    } else {
+      result.push(right.shift());
+    }
+  }
+
+  return result.concat(left, right);
+}
+
+
+function mergeSortWrapper() {
+  let arr = getInput();
+  let sorted = mergeSort(arr);
+
+  document.getElementById("result").innerText = "Sorted: " + sorted;
+  document.getElementById("complexity").innerText =
+    "Best / Average / Worst Case → Time Complexity: O(n log n)";
+}
+
+</script>
+
+</body>
+</html> 
